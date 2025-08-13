@@ -51,8 +51,16 @@ Thumbs.db
 tasks-fe/node_modules/
 tasks-fe/dist/
 tasks-fe/.svelte-kit/
+tasks-fe/.svelte/
+tasks-fe/.vite/
+tasks-fe/package-lock.json
 
 # Environment files
 .env
 .env.*
 !.env.example
+
+# Test files
+**/test/
+**/tests/
+**/test-results/

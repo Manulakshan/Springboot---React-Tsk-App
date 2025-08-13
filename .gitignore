@@ -46,3 +46,13 @@ logs/
 # System Files
 .DS_Store
 Thumbs.db
+
+# Frontend files
+tasks-fe/node_modules/
+tasks-fe/dist/
+tasks-fe/.svelte-kit/
+
+# Environment files
+.env
+.env.*
+!.env.example

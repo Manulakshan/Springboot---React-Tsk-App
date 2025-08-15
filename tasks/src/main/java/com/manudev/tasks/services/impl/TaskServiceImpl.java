@@ -9,9 +9,11 @@ import com.manudev.tasks.repositories.TaskListRepository;
 import com.manudev.tasks.repositories.TaskRepository;
 import com.manudev.tasks.services.TaskService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,6 +33,7 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.findByTaskListId(taskListId);
     }
 
+    @Transactional
     @Override
     public Task createTask(UUID taskListId, Task task) {
         if(null != task.getId()) {
@@ -57,6 +60,39 @@ public class TaskServiceImpl implements TaskService {
                 now
         );
         return taskRepository.save(taskToSave);
+    }
+
+    @Override
+    public Optional<Task> getTask(UUID taskListId, UUID taskId) {
+       return taskRepository.findByTaskListIdAndId(taskListId, taskId);
+    }
+
+    @Transactional
+    @Override
+    public Task updateTask(UUID taskListId, UUID taskId, Task task) {
+        if(null == task.getId()) {
+            throw new IllegalArgumentException("Task must have an id!!");
+        }
+        if(!Objects.equals(task.getId(),taskId) ) {
+            throw new IllegalArgumentException("not permitted to edit task list!");
+        }
+
+        Task existingTask = taskRepository.findByTaskListIdAndId(taskListId,taskId).orElseThrow(()
+                -> new IllegalArgumentException("Task does not exist!"));
+
+        existingTask.setTitle(task.getTitle());
+        existingTask.setDescription(task.getDescription());
+        existingTask.setDueDate(task.getDueDate());
+        existingTask.setStatus(task.getStatus());
+        existingTask.setPriority(task.getPriority());
+        existingTask.setUpdated(LocalDateTime.now());
+        return taskRepository.save(existingTask);
+
+    }
+    @Transactional
+    @Override
+    public void deleteTask(UUID taskListId, UUID taskId) {
+        taskRepository.deleteByTaskListIdAndId(taskListId, taskId);
     }
 
 

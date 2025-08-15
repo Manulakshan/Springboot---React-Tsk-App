@@ -65,4 +65,9 @@ public class TaskListServiceImpl implements TaskListService {
         existingTaskList.setUpdated(LocalDateTime.now());
         return tasklistRepository.save(existingTaskList);
     }
+
+    @Override
+    public void deleteTaskList(UUID id) {
+        tasklistRepository.deleteById(id);
+    }
 }
